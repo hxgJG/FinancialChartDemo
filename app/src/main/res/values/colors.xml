@@ -3,4 +3,14 @@
     <color name="colorPrimary">#008577</color>
     <color name="colorPrimaryDark">#00574B</color>
     <color name="colorAccent">#D81B60</color>
+
+    <!--++++++++++++++++++基金收益自定义View++++++++++++++++++++-->
+    <!--基金自定义view相关属性-->
+    <color name="color_fundView_xyTxtColor">#787274</color>
+    <color name="color_fundView_xLineColor">#c1bdbe</color>
+    <color name="color_fundView_brokenLineColor">#3785d9</color>
+    <color name="color_fundView_longPressLineColor">#ec210f</color>
+    <color name="color_fundView_pressIncomeTxt">#ec210f</color>
+    <color name="color_fundView_pressIncomeTxtBg">#87c9e7</color>
+    <color name="color_fundView_defIncomeTxt">#000000</color>
 </resources>
