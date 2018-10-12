@@ -1,12 +1,13 @@
 package com.hxg.financialchartdemo.ui
 
 import android.app.Activity
+import android.app.Dialog
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
-import android.widget.Toast
 import com.example.hxg.itemtouchmove.util.XLog
+import com.hxg.financialchartdemo.util.WeakArrayList
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.disposables.Disposable
 import org.greenrobot.eventbus.EventBus
@@ -14,12 +15,9 @@ import org.greenrobot.eventbus.EventBus
 open class BaseActivity : AppCompatActivity() {
 
     protected var mContext: Context? = null
-    protected var TAG: String? = null
+    protected var TAG = "com.hxg.financialchartdemo.ui.Activity"
     protected lateinit var mActivity: Activity
-    /**
-     * 对系统系统的toast进行简单封装，方便使用
-     */
-    private var toast: Toast? = null
+    private var toastDialogs: WeakArrayList<Dialog>? = WeakArrayList()
 
     private var compositeDisposable: CompositeDisposable? = null
 
@@ -29,7 +27,6 @@ open class BaseActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         mActivity = this
         mContext = this
-        TAG = this.javaClass.simpleName
         // getBundleExtras
         val extras = intent.extras
         if (null != extras) {
@@ -70,9 +67,14 @@ open class BaseActivity : AppCompatActivity() {
             EventBus.getDefault().unregister(mActivity)
         }
         if (compositeDisposable != null) {
-            XLog.d(TAG!!, "base activity dispose")
+            XLog.d(TAG, "base activity dispose")
             compositeDisposable!!.clear()
         }
+
+        toastDialogs?.Clear()
+        toastDialogs = null
+        mContext = null
+        compositeDisposable = null
     }
 
     /**
@@ -155,17 +157,6 @@ open class BaseActivity : AppCompatActivity() {
         _goActivity(clazz, bundle, requestCode, true)
     }
 
-
-    //可以立刻刷新Toast。推荐使用该方式。
-    fun showToast(str: String) {
-        if (toast == null) {
-            toast = Toast.makeText(applicationContext, str, Toast.LENGTH_SHORT)
-        } else {
-            toast!!.setText(str)
-        }
-        toast!!.show()
-    }
-
     private fun _goActivity(clazz: Class<out Activity>?, bundle: Bundle?, requestCode: Int, finish: Boolean) {
         if (null == clazz) {
             throw IllegalArgumentException("you must pass a target activity where to go.")
@@ -184,6 +175,10 @@ open class BaseActivity : AppCompatActivity() {
         }
     }
 
+    fun IsDestroyed(): Boolean {
+        return isDestroyed || isFinishing
+    }
+
     companion object {
         /**
          * Activity 跳转
@@ -193,5 +188,27 @@ open class BaseActivity : AppCompatActivity() {
          * @param finish 是否结束当前activity
          */
         val NON_CODE = -1
+    }
+
+    fun SetToastDialog(dialog: Dialog) {
+        toastDialogs?.Add(dialog)
+    }
+
+    fun RemoveToastDialog(dialog: Dialog) {
+        toastDialogs?.Remove(dialog)
+    }
+
+    fun GetToastDialog(): Dialog? {
+        toastDialogs?.run {
+            for (i in Size() - 1 downTo 0) {
+                val d = Get(i)
+
+                if (d != null && d.isShowing) {
+                    return d
+                }
+            }
+        }
+
+        return null
     }
 }

@@ -14,12 +14,12 @@ class OriginFundMode : Serializable {
      * timestamp : 1456213500
      */
 
-    var actual: String? = null
-    var createTime: String? = null
+    var actual: String = ""
+    var createTime: String = ""
     var economicId: Int = 0
-    var forecast: String? = null
+    var forecast: String = ""
     var historyId: Int = 0
-    var previous: String? = null
-    var revised: String? = null
+    var previous: String = ""
+    var revised: String = ""
     var timestamp: Long = 0
 }
